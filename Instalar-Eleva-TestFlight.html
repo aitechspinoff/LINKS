@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Instalar Eleva con TestFlight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+<style>
+  /* El mismo suelo que pone el visor cuando la hoja se publica en línea, para
+     que el fichero suelto se vea igual: sin margen del navegador y con las
+     imágenes contenidas. */
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+
+  /* Impresa se reparte en hojas por los cortes naturales: una tarjeta no se
+     parte por la mitad y ningún título se queda solo al pie de una página. */
+  @media print {
+    body { background: #fff; }
+    .tarjeta, .problemas li, .antes, .despues { break-inside: avoid; box-shadow: none; }
+    .cierre h3, .antes h2, .despues h2, .tarjeta h2 { break-after: avoid; }
+    .hoja { max-width: none; padding: 0; }
+  }
+
+  /* Hoja de una sola cara y un solo tema: fondo claro siempre, aunque el
+     teléfono esté en modo noche. Es una hoja que se imprime y se reenvía, y
+     tiene que verse igual en todos lados. Por eso cada color está escrito. */
+  :root {
+    --papel: #f4f6fd;
+    --tarjeta: #ffffff;
+    --tinta: #121554;
+    --tinta-suave: #565c8c;
+    --linea: #e2e6f4;
+    --amarillo: #ffe600;
+    --coral: #d8420b;
+    --cielo: #dbeaff;
+    --cielo-tinta: #17547f;
+    --display: "Quicksand", "Trebuchet MS", sans-serif;
+    --texto: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: var(--texto);
+    font-size: 20px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hoja { max-width: 36rem; margin: 0 auto; padding: 2.5rem 1.1rem 4rem; }
+
+  mark {
+    background: var(--amarillo);
+    color: #121554;
+    padding: .05em .2em;
+    border-radius: .12em;
+    font-weight: 700;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* ── Portada ──────────────────────────────────────────────────────────────── */
+  header { text-align: center; margin-bottom: 2.25rem; }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 9vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+    margin: 0 0 .6rem;
+  }
+
+  .bajada {
+    font-size: 1.15rem;
+    color: var(--tinta-suave);
+    margin: 0 auto;
+    max-width: 26rem;
+  }
+
+  .listo {
+    background: var(--amarillo);
+    color: #121554;
+    border-radius: .75rem;
+    padding: 1rem 1.25rem;
+    margin: 1.75rem 0 2.5rem;
+    font-size: 1.05rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  .listo strong { font-family: var(--display); font-weight: 700; }
+
+  /* ── El correo llega primero ──────────────────────────────────────────────── */
+  /* Va fuera de las tarjetas numeradas a propósito: no es un paso que la persona
+     haga, es algo que le PASA. Meterlo como «paso 0» habría sido pedirle que
+     hiciera algo que no depende de ella. */
+  .antes {
+    border-left: 4px solid var(--tinta);
+    padding: .2rem 0 .2rem 1.15rem;
+    margin: 0 0 2rem;
+  }
+  .antes h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.2;
+    margin: 0 0 .5rem;
+    text-wrap: balance;
+  }
+  .antes p { margin: 0 0 .55rem; font-size: 1.05rem; }
+  .antes p:last-child { margin-bottom: 0; color: var(--tinta-suave); }
+
+  /* ── Tarjetas ─────────────────────────────────────────────────────────────── */
+  .pasos { display: grid; gap: 1.15rem; }
+
+  .tarjeta {
+    background: var(--tarjeta);
+    border: 1px solid var(--linea);
+    border-radius: 1rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    box-shadow: 0 1px 0 rgba(18, 21, 84, .04), 0 14px 30px -22px rgba(18, 21, 84, .5);
+  }
+
+  .cabeza { display: flex; align-items: center; gap: .85rem; margin-bottom: 1rem; }
+
+  .badge {
+    flex: 0 0 auto;
+    width: 2.6rem; height: 2.6rem;
+    border-radius: .8rem;
+    background: var(--amarillo);
+    color: #121554;
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tarjeta h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.15;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  /* El número va ABSOLUTO, no como celda de una rejilla.
+     Con `display: grid` en el <li>, cada trozo del contenido se convierte en su
+     propio elemento de rejilla: el texto suelto en uno, cada <strong> en otro.
+     Con dos columnas definidas, el tercer trozo se iba a una fila nueva y salía
+     «Abre el / App Store / .» en tres renglones desalineados. Así el contenido
+     fluye como texto normal y no hay nada que partir. */
+  .toques { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; counter-reset: t; }
+  .toques li {
+    position: relative;
+    padding-left: 2.5rem;
+    min-height: 1.75rem;
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+  /* Sin círculo de fondo, y en gris: dentro de la tarjeta estos números son
+     subordinados. Con la pastilla amarilla del paso arriba y otro «1» en
+     círculo justo debajo, había dos numeraciones compitiendo y no se entendía
+     cuál mandaba. */
+  .toques li::before {
+    content: counter(t) ".";
+    counter-increment: t;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.75rem;
+    text-align: right;
+    padding-right: .45rem;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-suave);
+    line-height: 1.5;
+  }
+
+  .ojo {
+    margin: 1.15rem 0 0;
+    padding: .9rem 1.05rem;
+    background: #fff2ec;
+    border-radius: .65rem;
+    font-size: 1rem;
+    color: #7a2a08;
+  }
+  .ojo strong { color: var(--coral); }
+
+  .nota {
+    margin: 1.1rem 0 0;
+    font-size: 1rem;
+    color: var(--tinta-suave);
+  }
+
+  /* ── Reconocer un icono ───────────────────────────────────────────────────── */
+  .icono-fila {
+    display: flex; align-items: center; gap: .9rem;
+    margin: 1.15rem 0 0;
+    padding: .8rem .9rem;
+    border: 1px solid var(--linea);
+    border-radius: .75rem;
+  }
+  .icono-app { width: 3.4rem; height: 3.4rem; flex: 0 0 auto; }
+  .icono-app svg { display: block; width: 100%; height: 100%; }
+  .icono-fila .nombre { font-family: var(--display); font-weight: 700; font-size: 1.1rem; margin: 0; line-height: 1.2; }
+  .icono-fila .sub { font-size: .95rem; color: var(--tinta-suave); margin: 0; }
+  .pastilla {
+    margin-left: auto; flex: 0 0 auto;
+    font-family: var(--display); font-weight: 700;
+    font-size: .85rem; letter-spacing: .03em; text-transform: uppercase;
+    background: var(--cielo); color: var(--cielo-tinta);
+    border-radius: 99px; padding: .4rem 1rem;
+  }
+
+  /* ── Y después ────────────────────────────────────────────────────────────
+     Mismo tratamiento que «Lo primero que te llega es un correo»: los dos
+     cuentan algo que PASA, no algo que la persona hace, así que ninguno lleva
+     número. Uno abre la hoja y el otro la cierra, y se reconocen entre sí. */
+  .despues {
+    border-left: 4px solid var(--tinta);
+    padding: .2rem 0 .2rem 1.15rem;
+    margin: 2.25rem 0 0;
+  }
+  .despues h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.2;
+    margin: 0 0 .5rem;
+    text-wrap: balance;
+  }
+  .despues p { margin: 0 0 .6rem; font-size: 1.05rem; }
+  .despues p:last-child { margin-bottom: 0; }
+  .despues .apagado { color: var(--tinta-suave); }
+
+  /* ── Cierre ───────────────────────────────────────────────────────────────── */
+  .cierre { margin-top: 2.75rem; }
+  .cierre h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 0 .9rem;
+  }
+  .problemas { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
+  .problemas li {
+    background: var(--tarjeta);
+    border: 1px solid var(--linea);
+    border-radius: .7rem;
+    padding: .95rem 1.1rem;
+    font-size: 1.02rem;
+  }
+  .problemas b { font-family: var(--display); display: block; margin-bottom: .15rem; }
+
+  footer {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: .98rem;
+    color: var(--tinta-suave);
+  }
+  footer .version {
+    font-family: var(--display); font-weight: 700;
+    font-variant-numeric: tabular-nums; color: var(--tinta);
+  }
+
+  @media (max-width: 26rem) {
+    body { font-size: 19px; }
+    .tarjeta { padding: 1.25rem 1.15rem 1.35rem; }
+    .tarjeta h2 { font-size: 1.4rem; }
+  }
+</style>
+
+<div class="hoja">
+
+  <header>
+    <h1>Instalar Eleva</h1>
+    <p class="bajada">Eleva todavía no está en el App Store. Te llega por TestFlight, la app de Apple para probar aplicaciones antes de que salgan.</p>
+  </header>
+
+  <p class="listo">Con tu iPhone y tu cuenta de siempre <strong>ya tienes todo</strong>.<br>No hay que crear nada ni pagar nada.</p>
+
+  <section class="antes">
+    <h2>Lo primero que te llega es un correo</h2>
+    <p>Te mandamos una <strong>invitación por correo</strong>. Ese correo es el que abre todo… pero <mark>no lo toques todavía</mark>.</p>
+    <p>Si tocas el botón del correo sin haber hecho el paso 1, no te lleva a ninguna parte. Deja el correo ahí esperando y empieza por abajo.</p>
+  </section>
+
+  <div class="pasos">
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">1</span>
+        <h2>Descarga TestFlight</h2>
+      </div>
+      <ol class="toques">
+        <li>Abre el <strong>App Store</strong>.</li>
+        <li>Toca <strong>Buscar</strong>, abajo a la derecha.</li>
+        <li>Escribe <strong>TestFlight</strong>.</li>
+        <li>Toca <strong>Obtener</strong>.</li>
+      </ol>
+
+      <div class="icono-fila">
+        <div class="icono-app" aria-hidden="true">
+          <svg viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="tfFondo" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#7cc4f7"/>
+                <stop offset="1" stop-color="#1173d4"/>
+              </linearGradient>
+              <radialGradient id="tfBrillo" cx="34%" cy="26%" r="62%">
+                <stop offset="0" stop-color="#ffffff" stop-opacity=".38"/>
+                <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="tfAspa" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#c9e6fb"/>
+              </linearGradient>
+              <clipPath id="tfCaja"><rect x="2" y="2" width="56" height="56" rx="14"/></clipPath>
+            </defs>
+            <rect x="2" y="2" width="56" height="56" rx="14" fill="url(#tfFondo)"/>
+            <g clip-path="url(#tfCaja)" stroke="#ffffff" stroke-opacity=".22" stroke-width="1">
+              <path d="M16 2v56M30 2v56M44 2v56M2 16h56M2 30h56M2 44h56"/>
+            </g>
+            <circle cx="30" cy="30" r="19" fill="url(#tfBrillo)"/>
+            <g fill="url(#tfAspa)">
+              <path d="M30 28c3.2-2.6 4.4-7 4-11.6-.2-2-1.7-3.6-4-3.6s-3.8 1.6-4 3.6c-.4 4.6.8 9 4 11.6Z"/>
+              <path d="M30 28c-4-.9-8.2.6-11.4 3.9-1.4 1.4-1.7 3.6-.5 5.6 1.1 2 3.2 2.6 5.1 2 4.3-1.4 7.6-4.5 6.8-11.5Z"/>
+              <path d="M30 28c-.8 7 2.5 10.1 6.8 11.5 1.9.6 4-.1 5.1-2 1.2-2 .9-4.2-.5-5.6C38.2 28.6 34 27.1 30 28Z"/>
+            </g>
+            <circle cx="30" cy="29" r="2.4" fill="#eaf6ff"/>
+          </svg>
+        </div>
+        <div>
+          <p class="nombre">TestFlight</p>
+          <p class="sub">Apple · Gratis</p>
+        </div>
+        <span class="pastilla">Obtener</span>
+      </div>
+
+      <p class="nota">Hazlo <strong>aunque el correo ya te haya llegado</strong>. Y no abras TestFlight todavía: ahora sale vacía, y está bien.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">2</span>
+        <h2>Ahora sí: abre el correo <em>desde el iPhone</em></h2>
+      </div>
+      <ol class="toques">
+        <li>Busca el correo de <strong>TestFlight</strong>. Si no lo ves, mira en <strong>Spam</strong>.</li>
+        <li>Toca <strong>«Ver en TestFlight»</strong>.</li>
+        <li>Toca <strong>Aceptar</strong>.</li>
+      </ol>
+
+      <p class="ojo"><strong>Ojo:</strong> tiene que ser desde el teléfono. <mark>Desde la computadora no funciona</mark>, porque ese botón abre la app TestFlight y ahí no existe.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">3</span>
+        <h2>Toca Instalar</h2>
+      </div>
+      <ol class="toques">
+        <li>Ya dentro de TestFlight verás <strong>Eleva App</strong>.</li>
+        <li>Toca el botón azul <strong>Instalar</strong>.</li>
+      </ol>
+
+      <div class="icono-fila">
+        <div class="icono-app" aria-hidden="true">
+          <svg viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="elevaFondo" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#f0f1ff"/>
+                <stop offset="1" stop-color="#c6ccfa"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="56" height="56" rx="14" fill="url(#elevaFondo)"/>
+            <text x="30" y="35" text-anchor="middle" font-family="Quicksand, sans-serif" font-size="30" font-weight="700" fill="#121554">e</text>
+            <path d="M30 48c3.4-4.4 5.4-6.9 5.4-9.1a5.4 5.4 0 1 0-10.8 0c0 2.2 2 4.7 5.4 9.1Z" fill="#FF6D39"/>
+            <circle cx="30" cy="38.6" r="1.9" fill="#fff"/>
+          </svg>
+        </div>
+        <div>
+          <p class="nombre">Eleva App</p>
+          <p class="sub">1.0.0 (154)</p>
+        </div>
+        <span class="pastilla">Instalar</span>
+      </div>
+
+      <p class="nota">Te queda en la pantalla de inicio con un punto naranja al lado. Ese punto solo dice «es de prueba».</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">4</span>
+        <h2>Ábrela y entra</h2>
+      </div>
+      <ol class="toques">
+        <li>Busca <strong>Eleva App</strong> en tu pantalla de inicio.</li>
+        <li>Entra con tu <strong>número de WhatsApp</strong>, igual que en el chat.</li>
+      </ol>
+      <p class="nota">Ya está. Eso es todo.</p>
+    </section>
+
+  </div>
+
+  <section class="despues">
+    <h2>Y después</h2>
+    <p>Úsala normal, como cualquier otra app del teléfono. No hay que volver a TestFlight para abrirla.</p>
+    <p>Cada vez que saquemos una versión nueva te llega un aviso. Entras a TestFlight, tocas <strong>Actualizar</strong> y listo — no pierdes nada de lo que hayas hecho.</p>
+    <p class="apagado">A los <strong>90 días</strong> la versión caduca y la app deja de abrirse. Te avisa antes. Se arregla con esa misma actualización.</p>
+  </section>
+
+  <div class="cierre">
+    <h3>Si algo no sale</h3>
+    <ul class="problemas">
+      <li><b>No me llegó el correo</b>Mira en Spam y Promociones, y busca la palabra «TestFlight». Si nada, confírmanos con qué correo entras al App Store.</li>
+      <li><b>Toco el botón y no pasa nada</b>Lo abriste en la computadora, o falta bajar TestFlight. Vuelve al paso 1.</li>
+      <li><b>TestFlight está vacío</b>Falta aceptar la invitación (paso 2).</li>
+    </ul>
+  </div>
+
+  <div class="cierre">
+    <h3>Si ves algo raro dentro de la app</h3>
+    <ul class="problemas">
+      <li><b>Mándanos una captura</b>Toma la captura, toca la miniatura de abajo a la izquierda, dale a <strong>Compartir</strong> y elige <strong>TestFlight</strong>. Escribe qué esperabas y qué pasó.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p style="margin:0 0 .35rem">Estás probando <span class="version">Eleva App 1.0.0 (154)</span></p>
+    <p style="margin:0">Cualquier duda, escríbenos y la vemos contigo.</p>
+  </footer>
+
+</div>
+</html>
