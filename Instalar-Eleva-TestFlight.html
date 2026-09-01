@@ -21,8 +21,8 @@
      parte por la mitad y ningún título se queda solo al pie de una página. */
   @media print {
     body { background: #fff; }
-    .tarjeta, .problemas li, .antes, .despues { break-inside: avoid; box-shadow: none; }
-    .cierre h3, .antes h2, .despues h2, .tarjeta h2 { break-after: avoid; }
+    .tarjeta, .problemas li, .despues { break-inside: avoid; box-shadow: none; }
+    .cierre h3, .despues h2, .tarjeta h2 { break-after: avoid; }
     .hoja { max-width: none; padding: 0; }
   }
 
@@ -98,26 +98,6 @@
     font-weight: 600;
   }
   .listo strong { font-family: var(--display); font-weight: 700; }
-
-  /* ── El correo llega primero ──────────────────────────────────────────────── */
-  /* Va fuera de las tarjetas numeradas a propósito: no es un paso que la persona
-     haga, es algo que le PASA. Meterlo como «paso 0» habría sido pedirle que
-     hiciera algo que no depende de ella. */
-  .antes {
-    border-left: 4px solid var(--tinta);
-    padding: .2rem 0 .2rem 1.15rem;
-    margin: 0 0 2rem;
-  }
-  .antes h2 {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: 1.3rem;
-    line-height: 1.2;
-    margin: 0 0 .5rem;
-    text-wrap: balance;
-  }
-  .antes p { margin: 0 0 .55rem; font-size: 1.05rem; }
-  .antes p:last-child { margin-bottom: 0; color: var(--tinta-suave); }
 
   /* ── Tarjetas ─────────────────────────────────────────────────────────────── */
   .pasos { display: grid; gap: 1.15rem; }
@@ -227,9 +207,9 @@
   }
 
   /* ── Y después ────────────────────────────────────────────────────────────
-     Mismo tratamiento que «Lo primero que te llega es un correo»: los dos
-     cuentan algo que PASA, no algo que la persona hace, así que ninguno lleva
-     número. Uno abre la hoja y el otro la cierra, y se reconocen entre sí. */
+     Sin número, y a propósito: los cinco pasos son cosas que la persona HACE,
+     y esto es lo que pasa cuando ya no hay nada que hacer. Meterlo como paso 6
+     habría sido pedirle una acción que no existe. */
   .despues {
     border-left: 4px solid var(--tinta);
     padding: .2rem 0 .2rem 1.15rem;
@@ -287,23 +267,33 @@
 
   <header>
     <h1>Instalar Eleva</h1>
-    <p class="bajada">Eleva todavía no está en el App Store. Te llega por TestFlight, la app de Apple para probar aplicaciones antes de que salgan.</p>
+    <p class="bajada">Eleva todavía no está en el App Store. Te llega por TestFlight, la app de Apple para probar aplicaciones antes de que salgan. Son cinco pasos.</p>
   </header>
 
   <p class="listo">Con tu iPhone y tu cuenta de siempre <strong>ya tienes todo</strong>.<br>No hay que crear nada ni pagar nada.</p>
-
-  <section class="antes">
-    <h2>Te van a llegar dos correos</h2>
-    <p><strong>El primero es de App Store Connect.</strong> Te da entrada a nuestro equipo de pruebas. Ábrelo, entra con tu cuenta de Apple y toca <strong>Aceptar</strong>. Pasa una sola vez y no hay que hacer nada más con él.</p>
-    <p><strong>El segundo es de TestFlight.</strong> Ese es la invitación a la app… pero <mark>no lo toques todavía</mark>: primero haz el paso 1 de aquí abajo.</p>
-    <p>Si tocas el botón del correo de TestFlight sin haber instalado TestFlight, no te lleva a ninguna parte. Déjalo esperando y empieza por el 1.</p>
-  </section>
 
   <div class="pasos">
 
     <section class="tarjeta">
       <div class="cabeza">
         <span class="badge">1</span>
+        <h2>Dinos tu correo de Apple</h2>
+      </div>
+      <ol class="toques">
+        <li>Abre <strong>Configuración</strong> en tu iPhone.</li>
+        <li>Toca <strong>tu nombre</strong>, arriba del todo.</li>
+        <li>Toca <strong>Medios y compras</strong>.</li>
+        <li>Mándanos el correo que salga ahí.</li>
+      </ol>
+
+      <p class="ojo"><strong>Ojo:</strong> tiene que ser <mark>el de Medios y compras</mark>. No el de iCloud, no el del trabajo. Si nos das otro, la invitación te llega igual, la aceptas igual… y la app <strong>no te aparece nunca</strong>, sin ningún aviso que lo explique.</p>
+
+      <p class="nota">Con ese correo te damos de alta. Cuando lo tengamos, te llegan dos correos — de eso va el paso 3.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">2</span>
         <h2>Descarga TestFlight</h2>
       </div>
       <ol class="toques">
@@ -351,26 +341,27 @@
         <span class="pastilla">Obtener</span>
       </div>
 
-      <p class="nota">Hazlo <strong>aunque el correo ya te haya llegado</strong>. Y no abras TestFlight todavía: ahora sale vacía, y está bien.</p>
-    </section>
-
-    <section class="tarjeta">
-      <div class="cabeza">
-        <span class="badge">2</span>
-        <h2>Ahora sí: abre el correo <em>desde el iPhone</em></h2>
-      </div>
-      <ol class="toques">
-        <li>Busca el <strong>segundo</strong> correo, el de <strong>TestFlight</strong>. Si no lo ves, mira en <strong>Spam</strong>.</li>
-        <li>Toca <strong>«Ver en TestFlight»</strong>.</li>
-        <li>Toca <strong>Aceptar</strong>.</li>
-      </ol>
-
-      <p class="ojo"><strong>Ojo:</strong> tiene que ser desde el teléfono. <mark>Desde la computadora no funciona</mark>, porque ese botón abre la app TestFlight y ahí no existe.</p>
+      <p class="nota">Hazlo <strong>mientras esperas los correos</strong>. Y no abras TestFlight todavía: ahora sale vacía, y está bien.</p>
     </section>
 
     <section class="tarjeta">
       <div class="cabeza">
         <span class="badge">3</span>
+        <h2>Los dos correos, en este orden</h2>
+      </div>
+      <ol class="toques">
+        <li>Primero llega uno de <strong>App Store Connect</strong>. Ábrelo y toca <strong>Aceptar</strong>. Ya está: no hay que hacer nada más con ese.</li>
+        <li>Después llega el de <strong>TestFlight</strong>. Si no lo ves, mira en <strong>Spam</strong>.</li>
+        <li>Ábrelo <strong>en el teléfono</strong> y toca <strong>«Ver en TestFlight»</strong>.</li>
+        <li>Toca <strong>Aceptar</strong>.</li>
+      </ol>
+
+      <p class="ojo"><strong>Ojo:</strong> el de TestFlight tiene que abrirse desde el teléfono. <mark>Desde la computadora no funciona</mark>, porque ese botón abre la app TestFlight y ahí no existe.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">4</span>
         <h2>Toca Instalar</h2>
       </div>
       <ol class="toques">
@@ -405,7 +396,7 @@
 
     <section class="tarjeta">
       <div class="cabeza">
-        <span class="badge">4</span>
+        <span class="badge">5</span>
         <h2>Ábrela y entra</h2>
       </div>
       <ol class="toques">
@@ -428,9 +419,9 @@
     <h3>Si algo no sale</h3>
     <ul class="problemas">
       <li><b>No me llegó el correo</b>Mira en Spam y Promociones, y busca la palabra «TestFlight». Si nada, confírmanos con qué correo entras al App Store.</li>
-      <li><b>Toco el botón y no pasa nada</b>Lo abriste en la computadora, o falta bajar TestFlight. Vuelve al paso 1.</li>
-      <li><b>TestFlight está vacío</b>Falta aceptar la invitación (paso 2).</li>
-      <li><b>Me llegaron dos correos y no sé cuál es</b>Primero el de <strong>App Store Connect</strong> (acéptalo y ya). Después el de <strong>TestFlight</strong>, que es el del paso 2. En ese orden.</li>
+      <li><b>Toco el botón y no pasa nada</b>Lo abriste en la computadora, o falta bajar TestFlight. Vuelve al paso 2.</li>
+      <li><b>TestFlight está vacío</b>Falta aceptar el correo de TestFlight (paso 3). Y si ya lo aceptaste, casi seguro nos diste un correo distinto al de Medios y compras: dínoslo y te damos de alta otra vez.</li>
+      <li><b>Me llegaron dos correos y no sé cuál es</b>Primero el de <strong>App Store Connect</strong> (acéptalo y ya). Después el de <strong>TestFlight</strong>, que es el que instala la app. En ese orden.</li>
     </ul>
   </div>
 
