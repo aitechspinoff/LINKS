@@ -16,7 +16,8 @@
 
   @media print {
     body { background: #fff; }
-    .tarjeta, .problemas li, .despues, figure { break-inside: avoid; box-shadow: none; }
+    .tarjeta, .problemas li, .despues, figure,
+    .ios-pantalla, .plantilla { break-inside: avoid; box-shadow: none; }
     .cierre h3, .despues h2, .tarjeta h2 { break-after: avoid; }
     .hoja { max-width: none; padding: 0; }
   }
@@ -228,6 +229,104 @@
     margin: .55rem 0 0;
   }
 
+  /* ── Pantallas de iOS, dibujadas ──────────────────────────────────────────
+     Estas tres NO son capturas. Son HTML y CSS imitando la pantalla, y a
+     propósito: una captura de verdad de Ajustes lleva el nombre, la foto y el
+     correo de una persona real. Dibujadas, el ejemplo no es de nadie.
+     Todo va prefijado `ios-` para no chocar con .icono-fila ni .nombre. */
+  .ios-pantalla {
+    min-width: 0;
+    width: min(100%, 20rem);
+    margin: 0 auto;
+    padding: .8rem .7rem 1rem;
+    border-radius: 1.65rem;
+    background: #f2f2f7;
+    color: #050505;
+    border: 1px solid #dedee5;
+    box-shadow: inset 0 0 0 3px #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+  .ios-estado {
+    display: flex; justify-content: space-between;
+    padding: 0 .55rem .75rem;
+    font-size: .72rem; font-weight: 700;
+  }
+  .ios-titulo-grande { margin: .2rem .45rem .85rem; font-size: 1.75rem; font-weight: 800; letter-spacing: -.04em; }
+  .ios-titulo { margin: .15rem 0 1rem; text-align: center; font-size: 1.15rem; font-weight: 700; }
+  .ios-grupo { min-width: 0; overflow: hidden; border-radius: 1rem; background: #ffffff; }
+  .ios-hueco { height: .85rem; }
+  .ios-fila {
+    position: relative;
+    min-height: 3.35rem;
+    display: flex; align-items: center; gap: .75rem;
+    padding: .65rem 2rem .65rem .85rem;
+    border-bottom: 1px solid #dfdfe4;
+  }
+  .ios-fila > * { min-width: 0; }
+  .ios-fila:last-child { border-bottom: 0; }
+  .ios-fila::after {
+    content: "›"; position: absolute; right: .8rem;
+    color: #b7b7bc; font-size: 1.9rem; line-height: 1;
+  }
+  /* El resaltado amarillo: lo único que hay que mirar en cada pantalla. */
+  .ios-fila.mirar, .ios-cuenta.mirar {
+    outline: 4px solid var(--amarillo);
+    outline-offset: -4px;
+    background: #fffdee;
+  }
+  .ios-chip {
+    width: 2rem; height: 2rem; flex: 0 0 auto;
+    display: grid; place-items: center;
+    border-radius: .5rem;
+    background: var(--cielo); color: var(--cielo-tinta);
+    font-size: .95rem; font-weight: 700;
+  }
+  .ios-chip.vacio { background: #e5e5ea; }
+  .ios-avatar {
+    width: 2.7rem; height: 2.7rem; flex: 0 0 auto;
+    border-radius: 50%; background: #d8d8dd;
+    display: grid; place-items: center;
+  }
+  .ios-avatar::after { content: "👤"; font-size: 1.25rem; }
+  .ios-nombre { font-weight: 700; line-height: 1.15; }
+  .ios-detalle { color: #85858b; font-size: .78rem; }
+  .ios-valor { margin-left: auto; color: #85858b; font-size: .85rem; flex: 0 0 auto; }
+  .ios-cuenta { padding: 1rem .9rem; border-radius: 1rem; background: #ffffff; }
+  .ios-cuenta-fila {
+    min-width: 0; display: grid;
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    gap: .7rem; align-items: center;
+  }
+  .ios-cuenta-etiqueta { font-size: 1.05rem; font-weight: 650; }
+  .ios-correo { min-width: 0; color: #68686e; font-size: .78rem; text-align: right; white-space: nowrap; }
+  .ios-correo strong { color: #111111; }
+
+  /* ── Plantilla del mensaje ────────────────────────────────────────────────
+     Tinta oscura: es el bloque de acción que cierra el paso. */
+  .plantilla {
+    margin: 1.3rem 0 0;
+    padding: 1.25rem 1.1rem;
+    border-radius: 1rem;
+    background: var(--tinta);
+    color: #ffffff;
+    text-align: center;
+  }
+  .plantilla > p { margin: 0; font-size: 1rem; }
+  .mensaje {
+    display: block;
+    margin: .85rem 0 0;
+    padding: .85rem 1rem;
+    border-radius: .7rem;
+    background: #ffffff;
+    color: var(--tinta);
+    font-family: var(--display);
+    font-weight: 700;
+    text-align: left;
+  }
+  .plantilla .seguridad { margin: .95rem 0 0; color: #ffe98d; font-size: .92rem; }
+
   /* ── Y después ────────────────────────────────────────────────────────────
      Sin número, y a propósito: los cinco pasos son cosas que la persona HACE,
      y esto es lo que pasa cuando ya no hay nada que hacer. Meterlo como paso 6
@@ -282,6 +381,9 @@
     body { font-size: 19px; }
     .tarjeta { padding: 1.25rem 1.15rem 1.35rem; }
     .tarjeta h2 { font-size: 1.4rem; }
+    .ios-pantalla { border-radius: 1.35rem; }
+    .ios-cuenta-fila { grid-template-columns: 1fr; gap: .25rem; }
+    .ios-correo { text-align: left; white-space: normal; overflow-wrap: anywhere; }
   }
 </style>
 
@@ -304,13 +406,70 @@
       <ol class="toques">
         <li>Abre <strong>Configuración</strong> en tu iPhone.</li>
         <li>Toca <strong>tu nombre</strong>, arriba del todo.</li>
-        <li>Copia el correo que aparece debajo de tu nombre.</li>
+        <li>Baja y toca <strong>Contenido y compras</strong>.</li>
+        <li>Copia el correo de la fila <strong>Cuenta de Apple</strong>.</li>
         <li>Mándanoslo por WhatsApp.</li>
       </ol>
 
-      <p class="ojo"><strong>Ojo:</strong> tiene que ser <mark>ese</mark> y no otro que uses. Si nos das el del trabajo, o uno viejo, todo va a parecer bien —la invitación llega, la aceptas— pero la app <strong>no va a aparecer nunca</strong> en TestFlight. Y no sale ningún mensaje que te diga por qué.</p>
+      <figure>
+        <div class="ios-pantalla" role="img" aria-label="La pantalla Configuración del iPhone, con la fila de tu nombre resaltada arriba del todo.">
+          <div class="ios-estado"><span>9:41</span><span>●●● ᯤ 🔋</span></div>
+          <div class="ios-titulo-grande">Configuración</div>
+          <div class="ios-grupo">
+            <div class="ios-fila mirar">
+              <span class="ios-avatar"></span>
+              <span><span class="ios-nombre">Tu nombre</span><br><span class="ios-detalle">Cuenta de Apple, iCloud+ y más</span></span>
+            </div>
+            <div class="ios-fila"><span class="ios-chip">👥</span><span>Familia</span></div>
+          </div>
+        </div>
+        <figcaption>Toques 1 y 2: tu nombre está arriba del todo.</figcaption>
+      </figure>
 
-      <p class="nota">¿Quieres estar seguro del todo? En esa misma pantalla baja hasta <strong>Contenido y compras</strong> y tócala. Si ahí sale un correo <em>distinto</em> al de arriba, mándanos ese: es el que de verdad decide. Pasa pocas veces, pero cuando pasa es justo lo que rompe la instalación.</p>
+      <figure>
+        <div class="ios-pantalla" role="img" aria-label="La pantalla Cuenta de Apple, con la fila Contenido y compras resaltada en el segundo grupo.">
+          <div class="ios-estado"><span>9:41</span><span>●●● ᯤ 🔋</span></div>
+          <div class="ios-titulo">Cuenta de Apple</div>
+          <div class="ios-grupo">
+            <div class="ios-fila"><span class="ios-chip">🪪</span><span>Información personal</span></div>
+            <div class="ios-fila"><span class="ios-chip">🔒</span><span>Inicio de sesión y seguridad</span></div>
+            <div class="ios-fila"><span class="ios-chip">💳</span><span>Pago y envío</span><span class="ios-valor">Visa</span></div>
+          </div>
+          <div class="ios-hueco"></div>
+          <div class="ios-grupo">
+            <div class="ios-fila"><span class="ios-chip">☁</span><span>iCloud</span></div>
+            <div class="ios-fila"><span class="ios-chip">👥</span><span>Familia</span></div>
+            <div class="ios-fila"><span class="ios-chip">📍</span><span>Encontrar</span></div>
+            <div class="ios-fila mirar"><span class="ios-chip">A</span><strong>Contenido y compras</strong></div>
+            <div class="ios-fila"><span class="ios-chip vacio"></span><span>Iniciar sesión con Apple</span></div>
+          </div>
+        </div>
+        <figcaption>Toque 3: está abajo, en el segundo bloque. Hay que bajar para verla.</figcaption>
+      </figure>
+
+      <figure>
+        <div class="ios-pantalla" role="img" aria-label="La pantalla Configuración de la cuenta, con la fila Cuenta de Apple y su correo resaltada.">
+          <div class="ios-estado"><span>9:41</span><span>●●● ᯤ 🔋</span></div>
+          <div class="ios-titulo">Configuración de la cuenta</div>
+          <div class="ios-cuenta mirar">
+            <div class="ios-cuenta-fila">
+              <span class="ios-cuenta-etiqueta">Cuenta de Apple</span>
+              <span class="ios-correo"><strong>tu-correo@ejemplo.com</strong> ›</span>
+            </div>
+          </div>
+        </div>
+        <figcaption>Toque 4: ese es el correo. El tuyo será distinto a este.</figcaption>
+      </figure>
+
+      <p class="ojo"><strong>Ojo:</strong> tiene que ser el de <mark>Contenido y compras</mark> y no otro correo que uses. Si nos das el del trabajo, o uno viejo, todo va a parecer bien —la invitación llega, la aceptas— pero la app <strong>no va a aparecer nunca</strong> en TestFlight. Y no sale ningún mensaje que te diga por qué.</p>
+
+      <p class="nota">Casi siempre es el mismo que sale debajo de tu nombre, y entonces da igual cuál copies. Pero cuando son distintos, el que manda es el de <strong>Contenido y compras</strong>: ese es el que decide qué apps puede descargar el teléfono. Por eso te pedimos ese y no el otro.</p>
+
+      <div class="plantilla">
+        <p>Cópialo tal cual y mándanos este mensaje:</p>
+        <span class="mensaje">Mi correo de Cuenta de Apple es: __________</span>
+        <p class="seguridad">🔒 Nunca te vamos a pedir tu contraseña, ni códigos, ni datos de pago. Si alguien te los pide, no somos nosotros.</p>
+      </div>
     </section>
 
     <section class="tarjeta">
