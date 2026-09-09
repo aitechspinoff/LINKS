@@ -1,0 +1,35 @@
+# Las dos hojas tienen que ser el mismo archivo.
+#
+# El enlace viejo (Verificar-correo-Apple-TestFlight.html) ya está repartido en
+# chats de WhatsApp y no se puede recuperar, así que sirve la hoja completa igual
+# que el enlace nuevo. Si alguien edita una y olvida la otra, vuelve a haber dos
+# verdades — que es justo lo que hubo que arreglar. Esto lo caza en el push.
+#
+# Para editarlas: cambia Instalar-Eleva-TestFlight.html y luego copia encima:
+#   cp Instalar-Eleva-TestFlight.html Verificar-correo-Apple-TestFlight.html
+
+name: Las dos hojas son idénticas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  comparar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Comparar las dos hojas
+        run: |
+          A=Instalar-Eleva-TestFlight.html
+          B=Verificar-correo-Apple-TestFlight.html
+          if cmp -s "$A" "$B"; then
+            echo "OK: las dos hojas son idénticas."
+            exit 0
+          fi
+          echo "::error::Las dos hojas han divergido. Copia una encima de la otra: cp $A $B"
+          echo "Primeras diferencias (sin el ruido de las imágenes en base64):"
+          diff <(sed 's/base64,[^"]*/base64,IMG/g' "$A") \
+               <(sed 's/base64,[^"]*/base64,IMG/g' "$B") | head -40 || true
+          exit 1
