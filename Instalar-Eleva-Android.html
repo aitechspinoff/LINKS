@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Instalar Eleva en Android</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+<style>
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; }
+  img { max-width: 100%; height: auto; }
+
+  @media print {
+    body { background: #fff; }
+    .tarjeta, .problemas li, .despues, figure,
+    .pant-pantalla, .pant-dialogo, .plantilla { break-inside: avoid; box-shadow: none; }
+    .cierre h3, .despues h2, .tarjeta h2 { break-after: avoid; }
+    .hoja { max-width: none; padding: 0; }
+  }
+
+  /* Hoja de una sola cara y un solo tema: fondo claro siempre, aunque el
+     teléfono esté en modo noche. Es una hoja que se imprime y se reenvía, y
+     tiene que verse igual en todos lados. Por eso cada color está escrito. */
+  :root {
+    --papel: #f4f6fd;
+    --tarjeta: #ffffff;
+    --tinta: #121554;
+    --tinta-suave: #565c8c;
+    --linea: #e2e6f4;
+    --amarillo: #ffe600;
+    --coral: #d8420b;
+    --cielo: #dbeaff;
+    --cielo-tinta: #17547f;
+    --display: "Quicksand", "Trebuchet MS", sans-serif;
+    --texto: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: var(--texto);
+    font-size: 20px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hoja { max-width: 36rem; margin: 0 auto; padding: 2.5rem 1.1rem 4rem; }
+
+  mark {
+    background: var(--amarillo);
+    color: #121554;
+    padding: .05em .2em;
+    border-radius: .12em;
+    font-weight: 700;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* ── Portada ──────────────────────────────────────────────────────────────── */
+  header { text-align: center; margin-bottom: 2.25rem; }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 9vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+    margin: 0 0 .6rem;
+  }
+
+  .bajada {
+    font-size: 1.15rem;
+    color: var(--tinta-suave);
+    margin: 0 auto;
+    max-width: 26rem;
+  }
+
+  .listo {
+    background: var(--amarillo);
+    color: #121554;
+    border-radius: .75rem;
+    padding: 1rem 1.25rem;
+    margin: 1.75rem 0 2.5rem;
+    font-size: 1.05rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  .listo strong { font-family: var(--display); font-weight: 700; }
+
+  /* ── Tarjetas ─────────────────────────────────────────────────────────────── */
+  .pasos { display: grid; gap: 1.15rem; }
+
+  .tarjeta {
+    background: var(--tarjeta);
+    border: 1px solid var(--linea);
+    border-radius: 1rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    box-shadow: 0 1px 0 rgba(18, 21, 84, .04), 0 14px 30px -22px rgba(18, 21, 84, .5);
+  }
+
+  .cabeza { display: flex; align-items: center; gap: .85rem; margin-bottom: 1rem; }
+
+  .badge {
+    flex: 0 0 auto;
+    width: 2.6rem; height: 2.6rem;
+    border-radius: .8rem;
+    background: var(--amarillo);
+    color: #121554;
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tarjeta h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.55rem;
+    line-height: 1.15;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  /* El número va ABSOLUTO, no como celda de una rejilla.
+     Con `display: grid` en el <li>, cada trozo del contenido se convierte en su
+     propio elemento de rejilla: el texto suelto en uno, cada <strong> en otro.
+     Con dos columnas definidas, el tercer trozo se iba a una fila nueva y salía
+     «Abre el / App Store / .» en tres renglones desalineados. Así el contenido
+     fluye como texto normal y no hay nada que partir. */
+  .toques { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; counter-reset: t; }
+  .toques li {
+    position: relative;
+    padding-left: 2.5rem;
+    min-height: 1.75rem;
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+  /* Sin círculo de fondo, y en gris: dentro de la tarjeta estos números son
+     subordinados. Con la pastilla amarilla del paso arriba y otro «1» en
+     círculo justo debajo, había dos numeraciones compitiendo y no se entendía
+     cuál mandaba. */
+  .toques li::before {
+    content: counter(t) ".";
+    counter-increment: t;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.75rem;
+    text-align: right;
+    padding-right: .45rem;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-suave);
+    line-height: 1.5;
+  }
+
+  .ojo {
+    margin: 1.15rem 0 0;
+    padding: .9rem 1.05rem;
+    background: #fff2ec;
+    border-radius: .65rem;
+    font-size: 1rem;
+    color: #7a2a08;
+  }
+  .ojo strong { color: var(--coral); }
+
+  .nota {
+    margin: 1.1rem 0 0;
+    font-size: 1rem;
+    color: var(--tinta-suave);
+  }
+
+  /* ── Reconocer un icono ───────────────────────────────────────────────────── */
+  .icono-fila {
+    display: flex; align-items: center; gap: .9rem;
+    margin: 1.15rem 0 0;
+    padding: .8rem .9rem;
+    border: 1px solid var(--linea);
+    border-radius: .75rem;
+  }
+  .icono-app { width: 3.4rem; height: 3.4rem; flex: 0 0 auto; }
+  .icono-app svg { display: block; width: 100%; height: 100%; }
+  .icono-fila .nombre { font-family: var(--display); font-weight: 700; font-size: 1.1rem; margin: 0; line-height: 1.2; }
+  .icono-fila .sub { font-size: .95rem; color: var(--tinta-suave); margin: 0; }
+  .pastilla {
+    margin-left: auto; flex: 0 0 auto;
+    font-family: var(--display); font-weight: 700;
+    font-size: .85rem; letter-spacing: .03em; text-transform: uppercase;
+    background: var(--cielo); color: var(--cielo-tinta);
+    border-radius: 99px; padding: .4rem 1rem;
+  }
+
+  /* ── Capturas de verdad ───────────────────────────────────────────────────
+     Van incrustadas en el propio archivo (data URI) y no enlazadas: así la hoja
+     es UN fichero que se puede mandar por WhatsApp, abrir sin internet o
+     imprimir, sin que se rompa ninguna imagen. Recortadas y comprimidas a lo
+     que se ve —pesan 20 KB entre las dos— porque el probador la abre con datos
+     del móvil. */
+  figure { margin: 1.15rem 0 0; }
+  .captura {
+    display: block;
+    width: 100%;
+    /* `height: auto` NO es opcional. Los <img> llevan sus atributos `width` y
+       `height` reales —están para que la página no salte mientras cargan— y el
+       navegador los aplica como si fueran CSS. Al limitar solo el ancho, el alto
+       se quedaba en el del atributo y la imagen salía estirada a lo alto. */
+    height: auto;
+    max-width: 19rem;
+    margin: 0 auto;
+    border-radius: .8rem;
+    border: 1px solid var(--linea);
+  }
+  figcaption {
+    text-align: center;
+    font-size: .95rem;
+    color: var(--tinta-suave);
+    margin: .55rem 0 0;
+  }
+
+  /* ── Pantallas de iOS, dibujadas ──────────────────────────────────────────
+     Estas tres NO son capturas. Son HTML y CSS imitando la pantalla, y a
+     propósito: una captura de verdad de Ajustes lleva el nombre, la foto y el
+     correo de una persona real. Dibujadas, el ejemplo no es de nadie.
+     Todo va prefijado `pant-` para no chocar con .icono-fila ni .nombre. */
+  .pant-pantalla {
+    min-width: 0;
+    width: min(100%, 20rem);
+    margin: 0 auto;
+    padding: .8rem .7rem 1rem;
+    border-radius: 1.65rem;
+    background: #f2f2f7;
+    color: #050505;
+    border: 1px solid #dedee5;
+    box-shadow: inset 0 0 0 3px #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+  .pant-estado {
+    display: flex; justify-content: space-between;
+    padding: 0 .55rem .75rem;
+    font-size: .72rem; font-weight: 700;
+  }
+  .pant-titulo-grande { margin: .2rem .45rem .85rem; font-size: 1.75rem; font-weight: 800; letter-spacing: -.04em; }
+  .pant-titulo { margin: .15rem 0 1rem; text-align: center; font-size: 1.15rem; font-weight: 700; }
+  .pant-grupo { min-width: 0; overflow: hidden; border-radius: 1rem; background: #ffffff; }
+  .pant-hueco { height: .85rem; }
+  .pant-fila {
+    position: relative;
+    min-height: 3.35rem;
+    display: flex; align-items: center; gap: .75rem;
+    padding: .65rem 2rem .65rem .85rem;
+    border-bottom: 1px solid #dfdfe4;
+  }
+  .pant-fila > * { min-width: 0; }
+  .pant-fila:last-child { border-bottom: 0; }
+  .pant-fila::after {
+    content: "›"; position: absolute; right: .8rem;
+    color: #b7b7bc; font-size: 1.9rem; line-height: 1;
+  }
+  /* El resaltado amarillo: lo único que hay que mirar en cada pantalla. */
+  .pant-fila.mirar, .pant-cuenta.mirar {
+    outline: 4px solid var(--amarillo);
+    outline-offset: -4px;
+    background: #fffdee;
+  }
+  .pant-chip {
+    width: 2rem; height: 2rem; flex: 0 0 auto;
+    display: grid; place-items: center;
+    border-radius: .5rem;
+    background: var(--cielo); color: var(--cielo-tinta);
+    font-size: .95rem; font-weight: 700;
+  }
+  .pant-chip.vacio { background: #e5e5ea; }
+  .pant-avatar {
+    width: 2.7rem; height: 2.7rem; flex: 0 0 auto;
+    border-radius: 50%; background: #d8d8dd;
+    display: grid; place-items: center;
+  }
+  .pant-avatar::after { content: "👤"; font-size: 1.25rem; }
+  .pant-nombre { font-weight: 700; line-height: 1.15; }
+  .pant-detalle { color: #85858b; font-size: .78rem; }
+  .pant-valor { margin-left: auto; color: #85858b; font-size: .85rem; flex: 0 0 auto; }
+  .pant-cuenta { padding: 1rem .9rem; border-radius: 1rem; background: #ffffff; }
+  .pant-cuenta-fila {
+    min-width: 0; display: grid;
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    gap: .7rem; align-items: center;
+  }
+  .pant-cuenta-etiqueta { font-size: 1.05rem; font-weight: 650; }
+  .pant-correo { min-width: 0; color: #68686e; font-size: .78rem; text-align: right; white-space: nowrap; }
+  .pant-correo strong { color: #111111; }
+
+  /* ── Interruptor y diálogo de Android ────────────────────────────────────
+     Los dos sitios donde la gente se traba: el permiso «Permitir de esta
+     fuente» y la ventana de Play Protect. Dibujados, no fotografiados. */
+  .pant-fila.sin-flecha::after { content: none; }
+  .pant-interruptor {
+    margin-left: auto; flex: 0 0 auto;
+    width: 3.1rem; height: 1.85rem;
+    border-radius: 99px; background: #34c759;
+    position: relative;
+  }
+  .pant-interruptor::after {
+    content: ""; position: absolute;
+    top: .19rem; right: .19rem;
+    width: 1.47rem; height: 1.47rem;
+    border-radius: 50%; background: #ffffff;
+  }
+  .pant-dialogo {
+    width: min(100%, 20rem);
+    margin: 0 auto;
+    padding: 1.35rem 1.25rem 1rem;
+    border-radius: 1.6rem;
+    background: #ffffff;
+    border: 1px solid #dedee5;
+    color: #050505;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .pant-dialogo-titulo { margin: 0; font-size: 1.15rem; font-weight: 700; }
+  .pant-dialogo-texto { margin: .55rem 0 0; font-size: .95rem; color: #5c5c63; }
+  .pant-botones {
+    display: flex; justify-content: flex-end; align-items: center;
+    gap: .4rem; margin-top: 1.35rem; flex-wrap: wrap;
+  }
+  .pant-boton {
+    padding: .5rem .8rem;
+    border-radius: .55rem;
+    font-size: .95rem; font-weight: 700;
+    color: var(--cielo-tinta);
+  }
+  .pant-boton.mirar { outline: 4px solid var(--amarillo); outline-offset: -4px; background: #fffdee; }
+
+  /* ── Plantilla del mensaje ────────────────────────────────────────────────
+     Tinta oscura: es el bloque de acción que cierra el paso. */
+  .plantilla {
+    margin: 1.3rem 0 0;
+    padding: 1.25rem 1.1rem;
+    border-radius: 1rem;
+    background: var(--tinta);
+    color: #ffffff;
+    text-align: center;
+  }
+  .plantilla > p { margin: 0; font-size: 1rem; }
+  .mensaje {
+    display: block;
+    margin: .85rem 0 0;
+    padding: .85rem 1rem;
+    border-radius: .7rem;
+    background: #ffffff;
+    color: var(--tinta);
+    font-family: var(--display);
+    font-weight: 700;
+    text-align: left;
+  }
+  .plantilla .seguridad { margin: .95rem 0 0; color: #ffe98d; font-size: .92rem; }
+
+  /* ── Y después ────────────────────────────────────────────────────────────
+     Sin número, y a propósito: los cinco pasos son cosas que la persona HACE,
+     y esto es lo que pasa cuando ya no hay nada que hacer. Meterlo como paso 6
+     habría sido pedirle una acción que no existe. */
+  .despues {
+    border-left: 4px solid var(--tinta);
+    padding: .2rem 0 .2rem 1.15rem;
+    margin: 2.25rem 0 0;
+  }
+  .despues h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.2;
+    margin: 0 0 .5rem;
+    text-wrap: balance;
+  }
+  .despues p { margin: 0 0 .6rem; font-size: 1.05rem; }
+  .despues p:last-child { margin-bottom: 0; }
+  .despues .apagado { color: var(--tinta-suave); }
+
+  /* ── Cierre ───────────────────────────────────────────────────────────────── */
+  .cierre { margin-top: 2.75rem; }
+  .cierre h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 0 .9rem;
+  }
+  .problemas { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
+  .problemas li {
+    background: var(--tarjeta);
+    border: 1px solid var(--linea);
+    border-radius: .7rem;
+    padding: .95rem 1.1rem;
+    font-size: 1.02rem;
+  }
+  .problemas b { font-family: var(--display); display: block; margin-bottom: .15rem; }
+
+  footer {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: .98rem;
+    color: var(--tinta-suave);
+  }
+  footer .version {
+    font-family: var(--display); font-weight: 700;
+    font-variant-numeric: tabular-nums; color: var(--tinta);
+  }
+
+  @media (max-width: 26rem) {
+    body { font-size: 19px; }
+    .tarjeta { padding: 1.25rem 1.15rem 1.35rem; }
+    .tarjeta h2 { font-size: 1.4rem; }
+    .pant-pantalla { border-radius: 1.35rem; }
+    .pant-cuenta-fila { grid-template-columns: 1fr; gap: .25rem; }
+    .pant-correo { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+  }
+</style>
+
+<div class="hoja">
+
+  <header>
+    <h1>Instalar Eleva en Android</h1>
+    <p class="bajada">Eleva todavía no está en la Play Store. Te mandamos el archivo de la app por WhatsApp y lo instalas tú. Cinco pasos y unos diez minutos.</p>
+  </header>
+
+  <p class="listo">Solo necesitas <strong>el archivo que te mandamos</strong> y estar conectado al wifi.<br>No hay que crear ninguna cuenta ni pagar nada.</p>
+
+  <div class="pasos">
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">1</span>
+        <h2>Descarga el archivo</h2>
+      </div>
+      <ol class="toques">
+        <li>Abre nuestro chat de <strong>WhatsApp</strong>.</li>
+        <li>Busca el archivo que te mandamos. Se llama <strong>app-release.apk</strong>.</li>
+        <li>Toca la <strong>flecha hacia abajo</strong> que tiene al lado.</li>
+        <li>Espera a que el círculo se llene del todo.</li>
+      </ol>
+
+      <figure>
+        <div class="pant-pantalla" role="img" aria-label="Burbuja de WhatsApp con el archivo app-release.apk y la flecha de descarga resaltada.">
+          <div class="pant-estado"><span>9:41</span><span>●●● ᯤ 🔋</span></div>
+          <div class="pant-titulo">WhatsApp</div>
+          <div class="pant-grupo">
+            <div class="pant-fila mirar sin-flecha">
+              <span class="pant-chip">📄</span>
+              <span><span class="pant-nombre">app-release.apk</span><br><span class="pant-detalle">88 MB · toca la flecha ⬇</span></span>
+            </div>
+          </div>
+        </div>
+        <figcaption>Así llega. La flecha es lo que hay que tocar.</figcaption>
+      </figure>
+
+      <p class="ojo"><strong>Ojo:</strong> son <mark>88 megas</mark>. Con datos del celular puede tardar mucho y gastarte el plan. Conéctate al <strong>wifi</strong> antes de tocar la flecha. Y no cierres WhatsApp mientras baja.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">2</span>
+        <h2>Tócalo para abrirlo</h2>
+      </div>
+      <ol class="toques">
+        <li>Cuando termine de bajar, <strong>toca el archivo</strong>.</li>
+        <li>El teléfono te va a preguntar si quieres instalarlo.</li>
+      </ol>
+      <p class="nota">Si no pasa nada al tocarlo, es que todavía no terminó de bajar. Espera a que el círculo desaparezca y vuelve a tocarlo.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">3</span>
+        <h2>Dale permiso al teléfono</h2>
+      </div>
+      <p class="nota" style="margin-top:0">Casi seguro te sale un aviso que dice que <em>por seguridad no puedes instalar apps de esta fuente</em>. Es normal: tu teléfono solo confía en la Play Store hasta que tú le digas otra cosa. Se arregla en dos toques.</p>
+      <ol class="toques">
+        <li>Toca <strong>Configuración</strong> o <strong>Ajustes</strong> en ese mismo aviso.</li>
+        <li>Enciende el interruptor <strong>Permitir de esta fuente</strong>.</li>
+        <li>Toca la flecha de <strong>atrás</strong>. Vuelves solo a la instalación.</li>
+      </ol>
+
+      <figure>
+        <div class="pant-pantalla" role="img" aria-label="Pantalla de permiso con el interruptor Permitir de esta fuente encendido.">
+          <div class="pant-estado"><span>9:41</span><span>●●● ᯤ 🔋</span></div>
+          <div class="pant-titulo">Instalar apps desconocidas</div>
+          <div class="pant-grupo">
+            <div class="pant-fila sin-flecha"><span class="pant-chip">💬</span><span><span class="pant-nombre">WhatsApp</span></span></div>
+            <div class="pant-fila mirar sin-flecha"><strong>Permitir de esta fuente</strong><span class="pant-interruptor"></span></div>
+          </div>
+        </div>
+        <figcaption>Este interruptor. Tiene que quedar en verde.</figcaption>
+      </figure>
+
+      <p class="nota">Le estás dando el permiso <strong>solo a WhatsApp</strong>, no a todo el teléfono. Y solo por esta vez.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">4</span>
+        <h2>Pasa el aviso y toca Instalar</h2>
+      </div>
+      <p class="nota" style="margin-top:0">Ahora puede salirte una ventana de <strong>Play Protect</strong> diciendo que la app es desconocida o insegura. Sale <em>siempre</em> con las apps que no vienen de la Play Store, aunque estén perfectas. No significa que tenga nada malo.</p>
+      <ol class="toques">
+        <li>Toca <strong>Más detalles</strong>.</li>
+        <li>Toca <strong>Instalar de todos modos</strong>.</li>
+        <li>Después toca <strong>Instalar</strong> y espera.</li>
+      </ol>
+
+      <figure>
+        <div class="pant-dialogo" role="img" aria-label="Ventana de Play Protect con los botones Cancelar e Instalar de todos modos.">
+          <p class="pant-dialogo-titulo">¿Instalar app desconocida?</p>
+          <p class="pant-dialogo-texto">Play Protect no reconoce a quien hizo esta app.</p>
+          <div class="pant-botones">
+            <span class="pant-boton">Cancelar</span>
+            <span class="pant-boton mirar">Instalar de todos modos</span>
+          </div>
+        </div>
+        <figcaption>El botón de la derecha. El texto puede cambiar un poco según el teléfono.</figcaption>
+      </figure>
+
+      <p class="ojo"><strong>Ojo:</strong> si tocas <mark>Cancelar</mark> se detiene todo y hay que empezar otra vez desde el paso 2. El botón bueno es el otro.</p>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabeza">
+        <span class="badge">5</span>
+        <h2>Ábrela y entra</h2>
+      </div>
+      <ol class="toques">
+        <li>Cuando termine, toca <strong>Abrir</strong>.</li>
+        <li>Escribe tu <strong>número de WhatsApp</strong>, el mismo del chat.</li>
+        <li>Te llega un código por WhatsApp. Escríbelo y ya estás dentro.</li>
+      </ol>
+      <p class="nota">Queda en tu teléfono con el nombre <strong>Eleva App</strong>. Si no la ves, desliza hacia arriba para abrir la lista de todas las apps y búscala ahí.</p>
+
+      <div class="plantilla">
+        <p>¿Llegaste hasta aquí?</p>
+        <span class="mensaje">Listo, ya entré a Eleva ✅</span>
+        <p class="seguridad">🔒 El código te lo pide la <strong>app</strong>, nunca una persona. Si alguien te escribe pidiéndote ese código, o tu contraseña, o datos de pago, no somos nosotros.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="despues">
+    <h2>Y después</h2>
+    <p>Úsala normal, como cualquier otra app del teléfono.</p>
+    <p><strong>Las actualizaciones no llegan solas.</strong> Como no viene de la Play Store, cuando saquemos una versión nueva <mark>te mandamos otro archivo por WhatsApp</mark> y repites estos mismos pasos. El permiso del paso 3 ya va a estar dado, así que será más rápido.</p>
+    <p class="apagado">Al actualizar <strong>no pierdes nada</strong> de lo que hayas hecho: se instala encima de la anterior.</p>
+  </section>
+
+  <div class="cierre">
+    <h3>Si algo no sale</h3>
+    <ul class="problemas">
+      <li><b>Toco el archivo y no pasa nada</b>Todavía no terminó de bajar. Espera a que el círculo de la flecha desaparezca del todo y vuelve a tocarlo. Si se quedó a medias, tócalo otra vez para que siga bajando.</li>
+      <li><b>Dice que no puede instalar apps de esta fuente</b>Es el paso 3. Toca <strong>Configuración</strong> en ese mismo aviso, enciende <strong>Permitir de esta fuente</strong> y dale a atrás. No busques nada en los ajustes del teléfono: el aviso te lleva solo.</li>
+      <li><b>Play Protect dice que es insegura</b>Es el paso 4, y sale siempre con apps que no vienen de la Play Store. Toca <strong>Más detalles</strong> y luego <strong>Instalar de todos modos</strong>.</li>
+      <li><b>Dice «No se instaló la aplicación»</b>Casi siempre es una de dos: te falta espacio, o ya tienes una versión vieja puesta. Borra fotos o videos hasta tener <strong>500 MB libres</strong>, y si ya tenías Eleva, <strong>desinstálala</strong> y vuelve al paso 2.</li>
+      <li><b>No encuentro el archivo en el chat</b>Sube en la conversación hasta encontrarlo, o búscalo en <strong>Archivos</strong> → <strong>Descargas</strong>, o en la carpeta <strong>WhatsApp / Media / Documents</strong>.</li>
+      <li><b>Se instaló pero no la veo</b>Desliza hacia arriba en la pantalla principal para ver todas las apps y busca <strong>Eleva App</strong>. También puedes bajar el dedo desde el centro de la pantalla y escribir «Eleva».</li>
+      <li><b>Mi teléfono es Xiaomi, Redmi o POCO</b>Estos piden un paso más. Cuando salga el aviso, puede pedirte <strong>iniciar sesión con tu cuenta Mi</strong> o hacerte esperar <strong>10 segundos</strong> antes de dejarte tocar el botón. Espera y sigue: es normal.</li>
+      <li><b>Me quedé trabado en cualquier punto</b>Mándanos una foto de la pantalla donde estás y te decimos qué tocar. No hace falta que sepas explicarlo.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p style="margin:0 0 .35rem">Estás probando <span class="version">Eleva App 1.0.0</span></p>
+    <p style="margin:0">Cualquier duda, escríbenos y la vemos contigo.</p>
+  </footer>
+
+</div>
