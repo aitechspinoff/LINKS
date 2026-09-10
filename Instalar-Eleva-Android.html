@@ -20,6 +20,10 @@
     .pant-pantalla, .pant-dialogo, .plantilla { break-inside: avoid; box-shadow: none; }
     .cierre h3, .despues h2, .tarjeta h2 { break-after: avoid; }
     .hoja { max-width: none; padding: 0; }
+    /* En papel la hoja se aprieta un poco: a tamaño de pantalla salían 7 hojas,
+       la primera vacía en dos tercios, porque ninguna tarjeta se parte. Con esto
+       son 5 y la letra sigue siendo grande —quien imprime esto suele necesitarla. */
+    .hoja { zoom: .85; }
   }
 
   /* Hoja de una sola cara y un solo tema: fondo claro siempre, aunque el
